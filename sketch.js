@@ -1,6 +1,7 @@
 var WIDTH = 800;
 var HEIGHT = 600;
 var FPS = 60;
+var MILISECOND = FPS / 1000;
 
 glyph_line = [];
 for (i = 0; i < 3; i++) {
@@ -15,25 +16,49 @@ for (i = 0; i < 2; i++) {
     }
 }
 
+var glyphs_1 = [];
+var glyphs_2 = [];
+var primers = [];
+
+var glyphs_with_primers;
+var control_glyphs;
+
 var s;
+var timer;
+var i_glyph;
 function setup() {
     createCanvas(WIDTH, HEIGHT);
+    i_glyph = 0;
     //s = new Glyph();
     //s = new FixationPoint();
     //s = new Mask();
     frameRate(FPS);
-    s = new Primer(1);
+    s = new Primer(-1);
+    timer = new Timer();
 }
 
 function draw() {
     background(51);
     //s.update();
     s.show();
+    Timer.tick();
 }
 
 //Timer
 function Timer() {
-
+  
+this.time = 0;
+this.tick = function () {
+  if (!this.stoped)
+  {
+    // body of a function
+    s.show();
+    this.time ++;
+  }
+}  
+this.reset = function () {
+  this.time = 0;
+}
 }
 
 function Glyph(arr = []) {
@@ -97,4 +122,12 @@ function FixationPoint() {
         line(WIDTH / 2 + 25, HEIGHT / 2, WIDTH / 2 - 25, HEIGHT / 2);
         line(WIDTH / 2, HEIGHT / 2 + 25, WIDTH / 2, HEIGHT / 2 - 25);
     }
+}
+
+function Mark(idxGlyph, maxRange) {
+this.show = function () {
+  //show buttons if there are none
+  //add
+  //when button is pressed index glyph is set to correct number
+}
 }
