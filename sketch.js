@@ -1,22 +1,22 @@
 var WIDTH = window.innerWidth - 100;
 var HEIGHT = window.innerHeight - 100;
-var FPS = 50;
+var FPS = 60;
 var MILISECOND = FPS / 1000;
 var BACKGROUND = 255;
 var FOREGROUND = 10;
 
 var TEST_SIZE = 180;
 
-var FIXATION_TIME = 100;
-var MASK_TIME_1 = FIXATION_TIME + 50;
-var PRIME_TIME = MASK_TIME_1 + 32;
-var MASK_TIME_2 = PRIME_TIME + 50;
+var FIXATION_TIME = 24; //100 * MILISECOND;
+var MASK_TIME_1 = FIXATION_TIME + 3; //50 * MILISECOND;
+var PRIMER_TIME = MASK_TIME_1 + 2; //32 * MILISECOND;
+var MASK_TIME_2 = PRIMER_TIME + 3; //50 * MILISECOND;
 
 var alias = "";
-var age = 0;
+var age = "";
 var answers = [];
 
-var primers = 
+var _primers = 
 [
     ["aktywować", "0", "0"],
     ["elektryczność", "0", "0"],
@@ -200,7 +200,7 @@ var primers =
     ["zostać", "2", "2"]
 ];
 
-var targets =
+var _targets =
 [
     "agencja",
     "akt",
@@ -393,35 +393,39 @@ var fixation_point;
 var glyph;
 var mask;
 
-let arial;
+var primers = [];
+var targets = [];
+
+let fontFreeSans;
 
 function setup() {
     
-    arial = loadFont("ArialCE.ttf");
+    fontFreeSans = loadFont('FreeSans.otf');
 
-    shuffle(primers, true);
-    shuffle(targets, true);
+    shuffle(_primers, true);
+    shuffle(_targets, true);
 
     createCanvas(WIDTH, HEIGHT);
     testProgress = 0;
 
     for (i = 0; i < TEST_SIZE; i++) {
         answers.push("0\n");
+        primers.push(new Word(_primers[i][0]));
+        targets.push(new Word(_targets[i]));
     }
 
-
-    frameRate(FPS);
+    frameRate(500);
     timer = new Timer();
 
     s = fixation_point = new FixationPoint();
-    mask = new Mask();
+    mask = new Word("adshfgliha");
 
     var inpAlias = createInput("alias");
     inpAlias.position(WIDTH / 2 - 100, HEIGHT / 2 + 100);
     inpAlias.size(200, 25);
 
     var inpAge = createInput("age");
-    inpAge.position(WIDTH / 2 - 100, HEIGHT / 2 + 150);
+    inpAge.position(WIDTH / 2 - 100, HEIGHT / 2 + 130);
     inpAge.size(200, 25);
 
     var button = createButton("Start");
@@ -457,22 +461,22 @@ function Timer() {
                 s = mask;
             }
             else if (this.time < PRIMER_TIME) {
-                s = Primer(primers[testProgress][0]);
+                s = primers[testProgress];
             }
             else if (this.time < MASK_TIME_2) {
                 s = mask;
             }
-            else if (!this.waiting){
-                this.waiting = true;
-                s = Target(targets[testProgress]);
-
+            else {
+                s = targets[testProgress];
                 ShowButtons();
+                this.stop();
             }
-
-            this.time++;
         }
+
+        this.time++;
     }
     this.run = function () {
+        this.time = 0;
         this.stopped = false;
     }
     this.stop = function () {
@@ -481,10 +485,9 @@ function Timer() {
     this.reset = function () {
         this.time = 0;
         this.stopped = false;
-        this.waiting = false;
     }
     this.getTime = function () {
-        return this.time - MASK_TIME_2;
+        return (this.time - MASK_TIME_2) * MILISECOND;
     }
 }
 
@@ -501,7 +504,7 @@ function ShowButtons() {
 
 function answerPressedFun(i) {
     return function () {
-        answers[testProgress] = String(targets[testProgress]) + ", " + String(primers[testProgress]) + ", " + String(timer.getTime()) + "\r\n";
+        answers[testProgress] = String(_targets[testProgress]) + "," + String(_primers[testProgress]) + "," + String(timer.getTime()) + "\r";
         testProgress++;
         if (testProgress < TEST_SIZE) {
             timer.reset();
@@ -510,28 +513,19 @@ function answerPressedFun(i) {
             save(answers, alias, "txt");
         }
         removeElements();
-
     };
 }
 
-function Target(word) {
-    this.word = word;
-
-    this.show = function () {
-        ShowWord(this.word);
-    }
-}
-
-function Primer(word) {
+function Word(word) {
     this.word = word;
     this.show = function () {
-        ShowWord(this.word);
-    }
-}
+        fill(FOREGROUND);
+        stroke(FOREGROUND);
 
-function Mask() {
-    this.show = function () {
-        ShowWord("XXXXXXXXXXX");
+        textFont(fontFreeSans);
+        textSize(50);
+        textAlign(CENTER, CENTER);
+        text(this.word, WIDTH / 2, HEIGHT / 2);
     }
 }
 
@@ -543,15 +537,4 @@ function FixationPoint() {
         line(WIDTH / 2 + 25, HEIGHT / 2, WIDTH / 2 - 25, HEIGHT / 2);
         line(WIDTH / 2, HEIGHT / 2 + 25, WIDTH / 2, HEIGHT / 2 - 25);
     }
-}
-
-function ShowWord(word)
-{
-    fill();
-    stroke(FOREGROUND);
-
-    textFont(arial);
-    textSize(40);
-    textAlign(CENTER, CENTER);
-    text(word, WIDTH / 2, HEIGHT / 2);
 }
