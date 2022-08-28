@@ -435,8 +435,6 @@ function setup() {
     button.mousePressed(function () {
         alias = inpAlias.value();
         age = inpAge.value();
-        answers.push(String(alias + "\r"));
-        answers.push(String(age + "\r"));
         removeElements();
         timer.run();
     });
@@ -519,7 +517,7 @@ function answerPressedFun(i) {
             timer.reset();
         }
         else {
-            save(answers, alias, "txt");
+            save(answers, alias + "_" + age, "txt");
         }
         removeElements();
     };
