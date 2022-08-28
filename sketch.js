@@ -410,15 +410,15 @@ function setup() {
 
     for (i = 0; i < TEST_SIZE; i++) {
         answers.push("0\n");
-        primers.push(new Word(_primers[i][0]));
-        targets.push(new Word(_targets[i]));
+        primers.push(new Primer(_primers[i][0]));
+        targets.push(new Target(_targets[i]));
     }
 
     frameRate(500);
     timer = new Timer();
 
     s = fixation_point = new FixationPoint();
-    mask = new Word("xxxxxxxxxxx");
+    mask = new Primer("xxxxxxxxxxx");
 
     var inpAlias = createInput("alias");
     inpAlias.position(WIDTH / 2 - 100, HEIGHT / 2 + 100);
@@ -494,15 +494,6 @@ function Timer() {
 function ShowButtons() {
     var buttons = [];
 
-    fill(FOREGROUND);
-    stroke(FOREGROUND);
-
-    textFont(fontFreeSans);
-    textSize(20);
-    textAlign(CENTER, CENTER);
-    text("negatywne", WIDTH / 2 - 225, HEIGHT - 175);
-    text("pozytywne", WIDTH / 2 + 175, HEIGHT - 175);
-
     for (i = 1; i <= 5; i++) {
         buttons.push(createButton(i))
         buttons[i - 1].position(WIDTH / 2 - 325 + 100 * i, HEIGHT - 100);
@@ -525,7 +516,7 @@ function answerPressedFun(i) {
     };
 }
 
-function Word(word) {
+function Primer(word) {
     this.word = word;
     this.show = function () {
         fill(FOREGROUND);
@@ -537,6 +528,25 @@ function Word(word) {
         text(this.word, WIDTH / 2, HEIGHT / 2);
     }
 }
+
+function Target(word) {
+    this.word = word;
+    this.show = function () {
+        fill(FOREGROUND);
+        stroke(FOREGROUND);
+
+        textFont(fontFreeSans);
+        textSize(50);
+        textAlign(CENTER, CENTER);
+        text(this.word, WIDTH / 2, HEIGHT / 2);
+
+        textSize(20);
+        textAlign(CENTER, CENTER);
+        text("negatywne", WIDTH / 2 - 225, HEIGHT - 175);
+        text("pozytywne", WIDTH / 2 + 175, HEIGHT - 175);
+    }
+}
+    
 
 function FixationPoint() {
     this.show = function () {
