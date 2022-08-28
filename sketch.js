@@ -397,6 +397,7 @@ var primers = [];
 var targets = [];
 
 let fontFreeSans;
+var acceptingInput = false;
 
 function setup() {
     
@@ -469,6 +470,7 @@ function Timer() {
             else {
                 s = targets[testProgress];
                 ShowButtons();
+                acceptingInput = true;
                 this.stop();
             }
         }
@@ -502,8 +504,15 @@ function ShowButtons() {
     }
 }
 
+function keyPressed() {
+    if (acceptingInput && key >= '1' && key <= '5') {
+        answerPressedFun(key - '0')();
+    }
+}
+
 function answerPressedFun(i) {
     return function () {
+        acceptingInput = false;
         answers[testProgress] = String(_targets[testProgress]) + "," + String(_primers[testProgress]) + "," + String(i) + "," + String(timer.getTime()) + "\r";
         testProgress++;
         if (testProgress < TEST_SIZE) {
