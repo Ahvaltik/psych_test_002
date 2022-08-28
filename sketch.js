@@ -542,8 +542,8 @@ function Target(word) {
 
         textSize(20);
         textAlign(CENTER, CENTER);
-        text("negatywne", WIDTH / 2 - 225, HEIGHT - 175);
-        text("pozytywne", WIDTH / 2 + 175, HEIGHT - 175);
+        text("negatywne", WIDTH / 2 - 210, HEIGHT - 175);
+        text("pozytywne", WIDTH / 2 + 190, HEIGHT - 175);
     }
 }
     
