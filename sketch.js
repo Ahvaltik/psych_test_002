@@ -418,7 +418,7 @@ function setup() {
     timer = new Timer();
 
     s = fixation_point = new FixationPoint();
-    mask = new Word("adshfgliha");
+    mask = new Word("xxxxxxxxxxx");
 
     var inpAlias = createInput("alias");
     inpAlias.position(WIDTH / 2 - 100, HEIGHT / 2 + 100);
@@ -434,8 +434,8 @@ function setup() {
     button.mousePressed(function () {
         alias = inpAlias.value();
         age = inpAge.value();
-        answers.push(String(alias + "\r\n"));
-        answers.push(String(age + "\r\n"));
+        answers.push(String(alias + "\r"));
+        answers.push(String(age + "\r"));
         removeElements();
         timer.run();
     });
@@ -494,6 +494,15 @@ function Timer() {
 function ShowButtons() {
     var buttons = [];
 
+    fill(FOREGROUND);
+    stroke(FOREGROUND);
+
+    textFont(fontFreeSans);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("negatywne", WIDTH / 2 - 225, HEIGHT - 175);
+    text("pozytywne", WIDTH / 2 + 175, HEIGHT - 175);
+
     for (i = 1; i <= 5; i++) {
         buttons.push(createButton(i))
         buttons[i - 1].position(WIDTH / 2 - 325 + 100 * i, HEIGHT - 100);
@@ -504,7 +513,7 @@ function ShowButtons() {
 
 function answerPressedFun(i) {
     return function () {
-        answers[testProgress] = String(_targets[testProgress]) + "," + String(_primers[testProgress]) + "," + String(timer.getTime()) + "\r";
+        answers[testProgress] = String(_targets[testProgress]) + "," + String(_primers[testProgress]) + "," + String(i) + "," + String(timer.getTime()) + "\r";
         testProgress++;
         if (testProgress < TEST_SIZE) {
             timer.reset();
