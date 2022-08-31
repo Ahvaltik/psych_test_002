@@ -415,7 +415,7 @@ function setup() {
         targets.push(new Target(_targets[i]));
     }
 
-    frameRate(500);
+    frameRate(FPS);
     timer = new Timer();
 
     s = fixation_point = new FixationPoint();
